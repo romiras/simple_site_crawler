@@ -1,2 +1,7 @@
 # For available configuration options, see:
 #   https://github.com/testdouble/standard
+
+Style/StringLiterals:
+  Enabled: true
+  EnforcedStyle: single_quotes
+  ConsistentQuotesInMultiline: false
