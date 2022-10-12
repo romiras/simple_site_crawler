@@ -11,5 +11,11 @@ gem 'rspec', '~> 3.0'
 
 gem 'rubocop'
 
-gem 'ruby-debug-ide', group: :development
-gem 'debase', group: :development
+group :test, :development do
+  gem 'debase'
+  gem 'pry-byebug'
+  gem 'ruby-debug-ide'
+end
+
+# gem 'faraday-typhoeus'
+gem 'robotstxt-parser'
