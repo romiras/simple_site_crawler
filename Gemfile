@@ -10,3 +10,6 @@ gem 'rake', '~> 13.0'
 gem 'rspec', '~> 3.0'
 
 gem 'rubocop'
+
+gem 'ruby-debug-ide', group: :development
+gem 'debase', group: :development

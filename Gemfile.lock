@@ -7,6 +7,9 @@ GEM
   remote: https://rubygems.org/
   specs:
     ast (2.4.2)
+    debase (0.2.4.1)
+      debase-ruby_core_source (>= 0.10.2)
+    debase-ruby_core_source (0.10.17)
     diff-lcs (1.5.0)
     json (2.6.2)
     parallel (1.22.1)
@@ -41,6 +44,8 @@ GEM
       unicode-display_width (>= 1.4.0, < 3.0)
     rubocop-ast (1.21.0)
       parser (>= 3.1.1.0)
+    ruby-debug-ide (0.7.3)
+      rake (>= 0.8.1)
     ruby-progressbar (1.11.0)
     unicode-display_width (2.3.0)
 
@@ -48,9 +53,11 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
+  debase
   rake (~> 13.0)
   rspec (~> 3.0)
   rubocop
+  ruby-debug-ide
   simple_site_crawler!
 
 BUNDLED WITH
