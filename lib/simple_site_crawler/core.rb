@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
-require 'robotstxt'
+require 'set'
+require 'faraday'
+require 'faraday/typhoeus'
+require_relative './parsers/robots'
 module SimpleSiteCrawler
   # Core class of crawler
   class Core
@@ -10,32 +13,34 @@ module SimpleSiteCrawler
       'Mozilla/5.0 (Linux; Android 13; SM-A205U) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.5249.118 Mobile Safari/537.36',
     ].freeze
 
+    ROBOTS_TXT = '/robots.txt'
+
     def initialize(base_url)
       @base_url = base_url
+      @conn = Faraday.new(url: @base_url) do |f|
+        f.adapter :typhoeus
+      end
+      @user_agent = USER_AGENTS.sample
     end
 
     def call
-      user_agent = USER_AGENTS.sample
-
-      # conn = Faraday.new(url: @base_url) do |f|
-      #   f.adapter :typhoeus
-      # end
-      # resp = conn.get('/robots.txt')
-
-      uri = URI.parse(@base_url)
-      Net::HTTP.start(uri.host, uri.port) do |http|
-        
-        binding.pry
-        
-        robots = Robotstxt.get(http, user_agent)
-        robots.sitemaps
-
-        # if robots.allowed? "/index.html"
-        #   http.get("/index.html")
-        # elsif robots.allowed? "/index.php"
-        #   http.get("/index.php")
-        # end
+      sitemaps.each do |sitemap|
+        p sitemap
       end
+    end
+
+    private
+
+    def fetch_path(path)
+      @conn.get(path, nil, { 'User-Agent' => @user_agent })
+    end
+
+    def sitemaps
+      resp = fetch_path(ROBOTS_TXT)
+      raise "Unable to fetch #{ROBOTS_TXT}" unless resp.success?
+
+      robots_parser = SimpleSiteCrawler::Parsers::Robots.new(resp.body)
+      robots_parser.sitemaps
     end
   end
 end

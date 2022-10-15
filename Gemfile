@@ -17,5 +17,4 @@ group :test, :development do
   gem 'ruby-debug-ide'
 end
 
-# gem 'faraday-typhoeus'
-gem 'robotstxt-parser'
+gem 'faraday-typhoeus'
