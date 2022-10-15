@@ -21,11 +21,13 @@ module SimpleSiteCrawler
         f.adapter :typhoeus
       end
       @user_agent = USER_AGENTS.sample
+      @sitemaps_q = Queue.new
     end
 
     def call
       sitemaps.each do |sitemap|
         p sitemap
+        @sitemaps_q << sitemap
       end
     end
 
