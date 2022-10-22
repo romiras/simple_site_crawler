@@ -3,10 +3,14 @@
 require 'set'
 require 'faraday'
 require 'faraday/typhoeus'
+require_relative './logging'
+require_relative './async_worker_pool'
 require_relative './parsers/robots'
 module SimpleSiteCrawler
   # Core class of crawler
   class Core
+    include Logging
+
     USER_AGENTS = [
       'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:105.0) Gecko/20100101 Firefox/105.0',
       'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36',
@@ -21,14 +25,18 @@ module SimpleSiteCrawler
         f.adapter :typhoeus
       end
       @user_agent = USER_AGENTS.sample
-      @sitemaps_q = Queue.new
     end
 
     def call
-      sitemaps.each do |sitemap|
-        p sitemap
-        @sitemaps_q << sitemap
+      executor = proc { |job| handle_job(job) }
+      pool = SimpleSiteCrawler::AsyncWorkerPool.new(executor)
+
+      sitemaps.each do |sitemap_url|
+        logger.info sitemap_url
+        pool.add_job(sitemap_url)
       end
+
+      pool.run
     end
 
     private
@@ -43,6 +51,10 @@ module SimpleSiteCrawler
 
       robots_parser = SimpleSiteCrawler::Parsers::Robots.new(resp.body)
       robots_parser.sitemaps
+    end
+
+    def handle_job(job)
+      p job
     end
   end
 end
