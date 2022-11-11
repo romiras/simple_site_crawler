@@ -4,6 +4,7 @@ require 'set'
 require 'faraday'
 require 'faraday/typhoeus'
 require_relative './logging'
+require_relative './fetcher'
 require_relative './async_worker_pool'
 require_relative './parsers/robots'
 module SimpleSiteCrawler
@@ -11,20 +12,10 @@ module SimpleSiteCrawler
   class Core
     include Logging
 
-    USER_AGENTS = [
-      'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:105.0) Gecko/20100101 Firefox/105.0',
-      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36',
-      'Mozilla/5.0 (Linux; Android 13; SM-A205U) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.5249.118 Mobile Safari/537.36',
-    ].freeze
-
     ROBOTS_TXT = '/robots.txt'
 
     def initialize(base_url)
-      @base_url = base_url
-      @conn = Faraday.new(url: @base_url) do |f|
-        f.adapter :typhoeus
-      end
-      @user_agent = USER_AGENTS.sample
+      @fetcher = SimpleSiteCrawler::Fetcher.new(base_url)
     end
 
     def call
@@ -32,21 +23,17 @@ module SimpleSiteCrawler
       pool = SimpleSiteCrawler::AsyncWorkerPool.new(executor)
 
       sitemaps.each do |sitemap_url|
-        logger.info sitemap_url
         pool.add_job(sitemap_url)
       end
+      pool.close
 
       pool.run
     end
 
     private
 
-    def fetch_path(path)
-      @conn.get(path, nil, { 'User-Agent' => @user_agent })
-    end
-
     def sitemaps
-      resp = fetch_path(ROBOTS_TXT)
+      resp = @fetcher.fetch_path(ROBOTS_TXT)
       raise "Unable to fetch #{ROBOTS_TXT}" unless resp.success?
 
       robots_parser = SimpleSiteCrawler::Parsers::Robots.new(resp.body)

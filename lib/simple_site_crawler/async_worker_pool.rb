@@ -7,7 +7,7 @@ module SimpleSiteCrawler
     NUM_THREADS = 2
 
     def initialize(executor, num_workers = NUM_THREADS)
-      @sitemaps_q = Queue.new
+      @jobs = Queue.new
       @workers = []
 
       @num_workers = num_workers
@@ -15,40 +15,42 @@ module SimpleSiteCrawler
         @workers << new_worker(i)
       end
       @executor = executor
-      @q_emptiness_check_disabled = false
     end
 
     def run
+      logger.debug("==> join workers")
       @workers.each(&:join)
-      @num_workers.times { |i| logger.debug("worker #{i}: done") }
-
-      logger.debug("Left #{@sitemaps_q.length} jobs")
+      logger.debug("Left #{@jobs.length} jobs")
     end
 
     def add_job(job)
       logger.debug("==> pushing a job")
-      @sitemaps_q << job
+      @jobs << job
       logger.debug("==> job pushed")
-      logger.debug("Now #{@sitemaps_q.length} jobs are pending")
+      logger.debug("Now #{@jobs.length} jobs are pending")
+    end
+
+    def close
+      add_job(nil)
+      @jobs.close
     end
 
     private
 
     def new_worker(wid)
       Thread.new do
-        logger.debug "worker #{wid}: started as asleep"
-        while !@sitemaps_q.closed? && (@q_emptiness_check_disabled || !@sitemaps_q.empty?) && (job = @sitemaps_q.pop(true))
+        while jobs?(wid) && (job = @jobs.pop(true))
           logger.debug("worker #{wid}: job start")
           @executor.call(job) unless job.nil?
           logger.debug("worker #{wid}: job done")
         end
-        logger.debug("worker #{wid}: no more jobs")
       end
     end
 
-    def close
-      add_job(nil)
-      @sitemaps_q.close
+    def jobs?(wid)
+      x = !@jobs.closed? && !@jobs.empty?
+      logger.debug("worker #{wid}: no more jobs. Done")
+      x
     end
   end
 end
