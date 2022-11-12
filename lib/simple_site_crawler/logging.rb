@@ -1,7 +1,10 @@
+# frozen_string_literal: true
+
 require 'logger'
 
 module SimpleSiteCrawler
-  module Logging # Credits: https://stackoverflow.com/a/6768164/10118318
+  # Credits: https://stackoverflow.com/a/6768164/10118318
+  module Logging
     # This is the magical bit that gets mixed into your classes
     def logger
       Logging.logger

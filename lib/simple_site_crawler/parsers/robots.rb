@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'set'
 
 module SimpleSiteCrawler
@@ -24,7 +26,7 @@ module SimpleSiteCrawler
           when /^\s*Sitemap\s*:.+$/
             parts = line.split(': ')
 
-            @sitemaps << parts[1].strip + (parts[2].nil? ? '' : parts[2].strip)
+            @sitemaps << (parts[1].strip + (parts[2].nil? ? '' : parts[2].strip))
           end
         end
       end
