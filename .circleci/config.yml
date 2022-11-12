@@ -3,11 +3,20 @@ jobs:
   build:
     docker:
       - image: ruby:3.0.3
+        environment:
+          RAKE_ENV: test
     steps:
       - checkout
       - run:
-          name: Run the default task
+          name: Install gems
           command: |
             gem install bundler -v 2.2.32
             bundle install
+      - run:
+          name: Run rubocop
+          command: |
             bundle exec rake spec
+      - run:
+          name: Run linter
+          command: |
+            bundle exec rake rubocop

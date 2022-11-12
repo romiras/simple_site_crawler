@@ -10,3 +10,13 @@ gem 'rake', '~> 13.0'
 gem 'rspec', '~> 3.0'
 
 gem 'rubocop'
+
+group :development do
+  gem 'debase'
+  gem 'pry-byebug'
+  gem 'ruby-debug-ide' if ENV['RAKE_ENV'] == 'development'
+end
+
+gem 'async-worker'
+gem 'faraday-typhoeus'
+gem 'sitemap-parser', '< 0.6'
