@@ -11,7 +11,7 @@ gem 'rspec', '~> 3.0'
 
 gem 'rubocop'
 
-group :test, :development do
+group :development do
   gem 'debase'
   gem 'pry-byebug'
   gem 'ruby-debug-ide'
