@@ -1,0 +1,13 @@
+# For available configuration options, see:
+#   https://github.com/testdouble/standard
+
+AllCops:
+  TargetRubyVersion: 3.0
+
+Style/StringLiterals:
+  Enabled: true
+  EnforcedStyle: single_quotes
+  ConsistentQuotesInMultiline: false
+
+Layout/LineLength:
+  Max: 120
