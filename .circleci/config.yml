@@ -3,8 +3,8 @@ jobs:
   build:
     docker:
       - image: ruby:3.0.3
-      - environment:
-        RAKE_ENV: test
+        environment:
+          RAKE_ENV: test
     steps:
       - checkout
       - run:
