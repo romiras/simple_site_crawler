@@ -14,7 +14,7 @@ gem 'rubocop'
 group :development do
   gem 'debase'
   gem 'pry-byebug'
-  gem 'ruby-debug-ide'
+  gem 'ruby-debug-ide' if ENV['RAKE_ENV'] == 'development'
 end
 
 gem 'async-worker'
