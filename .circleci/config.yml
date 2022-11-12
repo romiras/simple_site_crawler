@@ -10,4 +10,4 @@ jobs:
           command: |
             gem install bundler -v 2.2.32
             bundle install
-            bundle exec rake
+            bundle exec rake spec
