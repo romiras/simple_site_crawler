@@ -1,10 +1,12 @@
 # frozen_string_literal: true
 
+require 'uri'
 require 'async'
 require 'async/worker'
 require_relative './logging'
 require_relative './fetcher'
 require_relative './parsers/robots'
+require_relative './sitemap_iterator'
 module SimpleSiteCrawler
   # Core class of crawler
   class Core
@@ -72,6 +74,11 @@ module SimpleSiteCrawler
 
     def handle_job(sitemap_url)
       logger.info sitemap_url
+      URI.parse(sitemap_url)
+
+      SimpleSiteCrawler::SitemapIterator.new(sitemap_url).call do |url|
+        url
+      end
     end
   end
 end

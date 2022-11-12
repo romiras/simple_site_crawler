@@ -38,6 +38,8 @@ GEM
     json (2.6.2)
     method_source (1.0.0)
     nio4r (2.5.8)
+    nokogiri (1.13.9-x86_64-linux)
+      racc (~> 1.4)
     parallel (1.22.1)
     parser (3.1.2.1)
       ast (~> 2.4.1)
@@ -47,6 +49,7 @@ GEM
     pry-byebug (3.9.0)
       byebug (~> 11.0)
       pry (~> 0.13.0)
+    racc (1.6.0)
     rainbow (3.1.1)
     rake (13.0.6)
     regexp_parser (2.6.0)
@@ -80,6 +83,9 @@ GEM
       rake (>= 0.8.1)
     ruby-progressbar (1.11.0)
     ruby2_keywords (0.0.5)
+    sitemap-parser (0.5.6)
+      nokogiri (~> 1.6)
+      typhoeus (>= 0.6, < 2.0)
     timers (4.3.5)
     typhoeus (1.4.0)
       ethon (>= 0.9.0)
@@ -99,6 +105,7 @@ DEPENDENCIES
   rubocop
   ruby-debug-ide
   simple_site_crawler!
+  sitemap-parser (< 0.6)
 
 BUNDLED WITH
    2.2.32

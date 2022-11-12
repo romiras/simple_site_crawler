@@ -19,3 +19,4 @@ end
 
 gem 'async-worker'
 gem 'faraday-typhoeus'
+gem 'sitemap-parser', '< 0.6'

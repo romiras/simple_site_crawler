@@ -22,7 +22,7 @@ module SimpleSiteCrawler
 
           case line
           when /^\s*Sitemap\s*:.+$/
-            parts = line.split(':')
+            parts = line.split(': ')
 
             @sitemaps << parts[1].strip + (parts[2].nil? ? '' : parts[2].strip)
           end
