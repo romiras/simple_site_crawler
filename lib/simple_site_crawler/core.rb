@@ -23,25 +23,27 @@ module SimpleSiteCrawler
       when 0
         logger.info 'No sitemaps'
       when 1
-        handle_job(sitemaps.first)
+        crawl_sitemap(sitemaps.first)
       else
-        run_reactor(sitemaps)
+        run_reactor(sitemaps) do |sitemap_url|
+          crawl_sitemap(sitemap_url)
+        end
       end
       :ok
     end
 
     private
 
-    def run_reactor(sitemaps)
+    def run_reactor(urls, &block)
       Async::Reactor.run do |task|
         # Make a pool with N workers:
-        pool = Async::Worker::Pool.new(pool_size(sitemaps.size))
+        pool = Async::Worker::Pool.new(pool_size(urls.size))
 
-        tasks = sitemaps.collect do |sitemap_url|
+        tasks = urls.collect do |url|
           task.async do
             # Add the work to the queue and wait for it to complete:
             pool.async do
-              handle_job(sitemap_url)
+              block.call(url)
             end
           end
         end
@@ -72,13 +74,17 @@ module SimpleSiteCrawler
       robots_parser.sitemaps
     end
 
-    def handle_job(sitemap_url)
-      logger.info sitemap_url
+    def crawl_sitemap(sitemap_url)
+      logger.info "Processing #{sitemap_url}"
       URI.parse(sitemap_url)
 
-      SimpleSiteCrawler::SitemapIterator.new(sitemap_url).call do |url|
-        url
+      SimpleSiteCrawler::SitemapIterator.new(sitemap_url).call do |urls|
+        crawl_resources(urls)
       end
+    end
+
+    def crawl_resources(urls)
+      p urls
     end
   end
 end
