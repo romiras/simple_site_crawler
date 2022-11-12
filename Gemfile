@@ -17,4 +17,5 @@ group :test, :development do
   gem 'ruby-debug-ide'
 end
 
+gem 'async-worker'
 gem 'faraday-typhoeus'

@@ -1,3 +1,8 @@
+# frozen_string_literal: true
+
+require 'faraday'
+require 'faraday/typhoeus'
+
 module SimpleSiteCrawler
   class Fetcher
     USER_AGENTS = [
