@@ -52,6 +52,23 @@ module SimpleSiteCrawler
 
     def crawl_resources(urls)
       p urls
+      SimpleSiteCrawler::AsyncWorkerPool.new(urls).call do |url|
+        crawl_resource(URI.parse(url))
+      end
+    end
+
+    def crawl_resource(uri)
+      path = uri.path
+      logger.info "Processing #{path}"
+
+      resp = @fetcher.fetch_path(path)
+      unless resp.success?
+        logger.error "Unable to fetch #{path}"
+        p(path, resp.status)
+        return
+      end
+
+      p(path, resp.body[0, 500])
     end
   end
 end
