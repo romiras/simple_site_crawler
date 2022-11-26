@@ -13,9 +13,10 @@ module SimpleSiteCrawler
 
     ROBOTS_TXT = '/robots.txt'
 
-    def initialize(base_url, options: {})
+    def initialize(base_url, executor, options: {})
       @fetcher = SimpleSiteCrawler::Fetcher.new(base_url)
       @regex_patterns = options.fetch(:regex_patterns, [])
+      @executor = executor
     end
 
     def call
@@ -52,7 +53,6 @@ module SimpleSiteCrawler
     end
 
     def crawl_resources(urls)
-      p urls
       SimpleSiteCrawler::AsyncWorkerPool.new(urls).call do |url|
         crawl_resource(URI.parse(url)) unless skip_resource?(url)
       end
@@ -61,11 +61,7 @@ module SimpleSiteCrawler
     def skip_resource?(url)
       return false if @regex_patterns.empty?
 
-      skip = true
-      @regex_patterns.each do |regex_pattern|
-        skip = false unless regex_pattern.match?(url)
-      end
-      skip
+      @regex_patterns.none? { |regex_pattern| regex_pattern.match?(url) }
     end
 
     def crawl_resource(uri)
@@ -78,7 +74,7 @@ module SimpleSiteCrawler
         return
       end
 
-      p(path, resp.body[0, 500])
+      @executor.call(path, resp.body)
     end
   end
 end
