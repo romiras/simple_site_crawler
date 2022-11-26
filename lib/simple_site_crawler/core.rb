@@ -54,14 +54,15 @@ module SimpleSiteCrawler
 
     def crawl_resources(urls)
       SimpleSiteCrawler::AsyncWorkerPool.new(urls).call do |url|
-        crawl_resource(URI.parse(url)) unless skip_resource?(url)
+        uri = URI.parse(url)
+        crawl_resource(uri) unless skip_resource?(uri.path)
       end
     end
 
-    def skip_resource?(url)
+    def skip_resource?(path)
       return false if @regex_patterns.empty?
 
-      @regex_patterns.none? { |regex_pattern| regex_pattern.match?(url) }
+      @regex_patterns.none? { |regex_pattern| regex_pattern.match?(path) }
     end
 
     def crawl_resource(uri)
