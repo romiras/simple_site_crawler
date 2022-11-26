@@ -18,6 +18,6 @@ group :development do
 end
 
 gem 'async-worker'
-gem 'faraday-typhoeus'
 gem 'faraday-follow_redirects'
+gem 'faraday-typhoeus'
 gem 'sitemap-parser', '< 0.6'
