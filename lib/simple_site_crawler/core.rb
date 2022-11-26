@@ -4,6 +4,7 @@ require 'uri'
 require_relative './async_worker_pool'
 require_relative './logging'
 require_relative './fetcher'
+require_relative './url_path_matcher'
 require_relative './parsers/robots'
 require_relative './sitemap_iterator'
 module SimpleSiteCrawler
@@ -15,7 +16,7 @@ module SimpleSiteCrawler
 
     def initialize(base_url, executor, options: {})
       @fetcher = SimpleSiteCrawler::Fetcher.new(base_url)
-      @regex_patterns = options.fetch(:regex_patterns, [])
+      @matcher = options.fetch(:matcher, [])
       @executor = executor
     end
 
@@ -60,9 +61,7 @@ module SimpleSiteCrawler
     end
 
     def skip_resource?(path)
-      return false if @regex_patterns.empty?
-
-      @regex_patterns.none? { |regex_pattern| regex_pattern.match?(path) }
+      !@matcher.match?(path)
     end
 
     def crawl_resource(uri)
