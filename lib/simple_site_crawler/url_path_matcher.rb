@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module SimpleSiteCrawler
   class UrlPathMatcher
     def initialize(regex_patterns)
