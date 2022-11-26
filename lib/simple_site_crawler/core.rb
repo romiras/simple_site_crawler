@@ -4,6 +4,7 @@ require 'uri'
 require_relative './async_worker_pool'
 require_relative './logging'
 require_relative './fetcher'
+require_relative './url_path_matcher'
 require_relative './parsers/robots'
 require_relative './sitemap_iterator'
 module SimpleSiteCrawler
@@ -13,8 +14,10 @@ module SimpleSiteCrawler
 
     ROBOTS_TXT = '/robots.txt'
 
-    def initialize(base_url)
+    def initialize(base_url, executor, options: {})
       @fetcher = SimpleSiteCrawler::Fetcher.new(base_url)
+      @matcher = options.fetch(:matcher, [])
+      @executor = executor
     end
 
     def call
@@ -51,7 +54,27 @@ module SimpleSiteCrawler
     end
 
     def crawl_resources(urls)
-      p urls
+      SimpleSiteCrawler::AsyncWorkerPool.new(urls).call do |url|
+        uri = URI.parse(url)
+        crawl_resource(uri) unless skip_resource?(uri.path)
+      end
+    end
+
+    def skip_resource?(path)
+      !@matcher.match?(path)
+    end
+
+    def crawl_resource(uri)
+      path = uri.path
+      logger.info "Processing #{path}"
+
+      resp = @fetcher.fetch_path(path)
+      unless resp.success?
+        logger.error "Error: #{resp.status}. Unable to fetch #{path} ."
+        return
+      end
+
+      @executor.call(path, resp.body)
     end
   end
 end

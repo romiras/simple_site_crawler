@@ -2,6 +2,7 @@
 
 require 'faraday'
 require 'faraday/typhoeus'
+require 'faraday/follow_redirects'
 
 module SimpleSiteCrawler
   class Fetcher
@@ -14,6 +15,7 @@ module SimpleSiteCrawler
 
     def initialize(base_url)
       @conn = Faraday.new(url: base_url) do |f|
+        f.response :follow_redirects # use Faraday::FollowRedirects::Middleware
         f.adapter :typhoeus
       end
       @user_agent = USER_AGENTS.sample
