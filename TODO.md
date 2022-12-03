@@ -18,6 +18,7 @@ https://felipecsl.github.io/wombat/
 
 * https://www.rubylove.com/sitemap.xml
 * https://qna.habr.com/sm-index.xml
+    * https://hsto.org/getpro/toster/sitemap/20221126/index.xml
 
 ## Crawling algorithm
 

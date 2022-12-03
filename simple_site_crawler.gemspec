@@ -32,6 +32,10 @@ Gem::Specification.new do |spec|
 
   # Uncomment to register a new dependency of your gem
   # spec.add_dependency 'example-gem', '~> 1.0'
+  spec.add_dependency 'async-worker'
+  spec.add_dependency 'faraday-follow_redirects'
+  spec.add_dependency 'faraday-typhoeus'
+  spec.add_dependency 'sitemap-parser'
 
   # For more information and examples about making a new gem, checkout our
   # guide at: https://bundler.io/guides/creating_gem.html

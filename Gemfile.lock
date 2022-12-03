@@ -2,6 +2,10 @@ PATH
   remote: .
   specs:
     simple_site_crawler (0.1.0)
+      async-worker
+      faraday-follow_redirects
+      faraday-typhoeus
+      sitemap-parser
 
 GEM
   remote: https://rubygems.org/
