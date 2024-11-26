@@ -16,7 +16,7 @@ module SimpleSiteCrawler
     def initialize(base_url, options = {})
       @headers = {
         'Accept-Encoding' => 'gzip,deflate',
-        'User-Agent' => USER_AGENTS.sample,
+        'User-Agent' => USER_AGENTS.sample
       }.merge(options.fetch(:headers, {}))
 
       @conn = Faraday.new(url: base_url, headers: @headers) do |f|
