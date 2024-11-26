@@ -20,7 +20,7 @@ module SimpleSiteCrawler
 
       def parse
         @io.each_line do |line|
-          next if line.length.zero?
+          next if line.empty?
 
           case line
           when /^\s*Sitemap\s*:.+$/
