@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'set'
-
 module SimpleSiteCrawler
   module Parsers
     # Parse robots.txt

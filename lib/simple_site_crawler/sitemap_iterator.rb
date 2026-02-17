@@ -9,8 +9,8 @@ module SimpleSiteCrawler
       @slice_size = slice_size
     end
 
-    def call(&block)
-      @sitemap.to_a.each_slice(@slice_size, &block)
+    def call(...)
+      @sitemap.to_a.each_slice(@slice_size, ...)
     end
   end
 end

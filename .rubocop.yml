@@ -2,7 +2,7 @@
 #   https://github.com/testdouble/standard
 
 AllCops:
-  TargetRubyVersion: 2.6
+  TargetRubyVersion: 3.4
 
 Gemspec/DeprecatedAttributeAssignment: # new in 1.30
   Enabled: true

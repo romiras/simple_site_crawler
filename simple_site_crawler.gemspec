@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
   spec.summary = 'A naïve web-site crawler'
   spec.description = 'A naïve web-site crawler that uses sitemap.'
   spec.homepage = "https://github.com/romiras/#{spec.name}"
-  spec.required_ruby_version = '>= 2.6.0'
+  spec.required_ruby_version = '>= 3.4.0'
 
   # spec.metadata['allowed_push_host'] = "TODO: Set to your gem server 'https://example.com'"
 
@@ -33,9 +33,13 @@ Gem::Specification.new do |spec|
   # Uncomment to register a new dependency of your gem
   # spec.add_dependency 'example-gem', '~> 1.0'
   spec.add_dependency 'async-worker'
+  spec.add_dependency 'base64'
   spec.add_dependency 'faraday-follow_redirects'
   spec.add_dependency 'faraday-typhoeus'
+  spec.add_dependency 'logger'
   spec.add_dependency 'sitemap-parser'
+
+  spec.add_development_dependency 'ostruct'
 
   # For more information and examples about making a new gem, checkout our
   # guide at: https://bundler.io/guides/creating_gem.html
